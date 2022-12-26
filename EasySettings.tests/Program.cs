@@ -6,7 +6,7 @@ namespace EasySettings.tests
     {
         static void Main(string[] args)
         {
-            Console.WriteLine(Settings.file);
+            Console.WriteLine(Settings.path);
             Settings.Load();
             Console.WriteLine(Settings.GetValueOfKey("test"));
             Settings.AddValueOfKey("test","Cool");

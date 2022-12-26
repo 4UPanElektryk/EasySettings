@@ -7,15 +7,15 @@ namespace EasySettings
 {
     public class Settings
     {
-        public static string file = "settings.cfg";
+        public static string path = "settings.cfg";
         private static Dictionary<string,string> Dict = new Dictionary<string,string>();
         public static void Load()
         {
-            if (!File.Exists(file))
+            if (!File.Exists(path))
             {
                 return;
             }
-            foreach (string item in File.ReadAllLines(file))
+            foreach (string item in File.ReadAllLines(path))
             {
                 if (!item.StartsWith("#"))
                 {
@@ -53,23 +53,39 @@ namespace EasySettings
         }
         public static void Save()
         {
-            List<string> lines = new List<string>(File.ReadAllLines(file));
-            List<string> settings = GetKeysOfDictAsAList(Dict);
-            for (int i = 0; i < lines.Count; i++)
+            List<string> lines = null;
+            if (File.Exists(path))
             {
-                string item = lines[i];
-                if (!item.StartsWith("#"))
+                lines = new List<string>(File.ReadAllLines(path));
+            }
+            List<string> settings = GetKeysOfDictAsAList(Dict);
+            if (lines != null)
+            {
+                for (int i = 0; i < lines.Count; i++)
                 {
-                    string name = item.Split('=')[0];
-                    settings.Remove(name);
-                    lines[i] = name+"="+GetValueOfKey(name);
+                    string item = lines[i];
+                    if (!item.StartsWith("#"))
+                    {
+                        string name = item.Split('=')[0];
+                        settings.Remove(name);
+                        lines[i] = name + "=" + GetValueOfKey(name);
+                    }
                 }
+            }
+            else
+            {
+                lines = new List<string>();
             }
             foreach (string item in settings)
             {
-                lines.Add(item + "=" + GetValueOfKey(item));
+                string value = GetValueOfKey(item);
+                if (value == null)
+                {
+                    value = "";
+                }
+                lines.Add(item + "=" + value);
             }
-            File.WriteAllLines(file, lines);
+            File.WriteAllLines(path, lines);
         }
     }
 }
