@@ -9,6 +9,9 @@ namespace EasySettings.tests
             Console.WriteLine(Settings.file);
             Settings.Load();
             Console.WriteLine(Settings.GetValueOfKey("test"));
+            Settings.AddValueOfKey("test","Cool");
+            Settings.Save();
+            Console.WriteLine(Settings.GetValueOfKey("test"));
             Console.ReadKey();
         }
     }
