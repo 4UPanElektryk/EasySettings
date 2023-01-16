@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Xml.Schema;
+using System.Linq;
 
 namespace EasySettings
 {
@@ -18,12 +18,21 @@ namespace EasySettings
 			{
 				return;
 			}
+			string nestation = "";
 			foreach (string item in File.ReadAllLines(path))
 			{
-				if (!item.StartsWith("#"))
+				if (item.StartsWith("["))
 				{
-					string name = item.Split('=')[0];
-					string value = item.Substring(name.Length + 1);
+					nestation = item.Substring(1).TrimEnd(']');
+				}
+				else if (!item.StartsWith("#") && item.Contains("="))
+				{
+					string name = nestation + "." + item.Split('=')[0];
+					if (nestation == "")
+					{
+						name = item.Split('=')[0];
+					}
+					string value = item.Substring(item.Split('=')[0].Length + 1);
 					Dict.Add(name, value);
 				}
 			}
@@ -64,10 +73,10 @@ namespace EasySettings
 			}
 			return keys;
 		}
-        /// <summary>
-        /// Saves all values to <c>Settings.path</c>
-        /// </summary>
-        public static void Save()
+		/// <summary>
+		/// Saves all values to <c>Settings.path</c>
+		/// </summary>
+		public static void Save()
 		{
 			List<string> lines = null;
 			if (File.Exists(path))
@@ -75,16 +84,23 @@ namespace EasySettings
 				lines = new List<string>(File.ReadAllLines(path));
 			}
 			List<string> settings = GetKeysOfDictAsAList(Dict);
+
 			if (lines != null)
 			{
+				string nestation = "";
 				for (int i = 0; i < lines.Count; i++)
 				{
 					string item = lines[i];
-					if (!item.StartsWith("#"))
+
+					if (!item.StartsWith("#") && item.Contains("="))
 					{
-						string name = item.Split('=')[0];
+						string name = nestation + item.Split('=')[0];
 						settings.Remove(name);
-						lines[i] = name + "=" + GetValueOfKey(name);
+						lines[i] = item.Split('=')[0] + "=" + GetValueOfKey(name);
+					}
+					else if (item.StartsWith("["))
+					{
+						nestation += item.Substring(1).TrimEnd(']');
 					}
 				}
 			}

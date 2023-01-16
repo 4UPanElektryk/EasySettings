@@ -3,6 +3,11 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>4UPanElektryk</Authors>
+    <Title>4UPanElektryk.EasySettings</Title>
+    <Description>simplify settings</Description>
+    <PackageProjectUrl>https://github.com/4UPanElektryk/EasySettings</PackageProjectUrl>
+    <PackageTags>settings;</PackageTags>
+    <PackageId>4UPanElektryk.EasySettings</PackageId>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
