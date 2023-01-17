@@ -37,6 +37,19 @@ namespace EasySettings
 				}
 			}
 		}
+		public static List<string> GetKeysOfDomain(string domain) 
+		{
+			List<string> keys = GetKeysOfDictAsAList(Dict);
+			List<string> toreturn = new List<string>();
+			foreach (string item in keys)
+			{
+				if (item.StartsWith(domain))
+				{
+					toreturn.Add(item);
+				}
+			}
+			return toreturn;
+		}
 		/// <summary>
 		/// Gets the value by the name
 		/// </summary>
@@ -100,7 +113,7 @@ namespace EasySettings
 					}
 					else if (item.StartsWith("["))
 					{
-						nestation += item.Substring(1).TrimEnd(']');
+						nestation = item.Substring(1).TrimEnd(']');
 					}
 				}
 			}
@@ -108,16 +121,21 @@ namespace EasySettings
 			{
 				lines = new List<string>();
 			}
-			foreach (string item in settings)
+			List<string> st = new List<string>();
+				foreach (string item in settings)
 			{
 				string value = GetValueOfKey(item);
 				if (value == null)
 				{
 					value = "";
 				}
-				lines.Add(item + "=" + value);
+				st.Add(item + "=" + value);
 			}
-			File.WriteAllLines(path, lines);
+			foreach (string item in lines)
+			{
+				st.Add(item);
+			}
+			File.WriteAllLines(path, st);
 		}
 	}
 }
